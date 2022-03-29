@@ -42,6 +42,14 @@ JOIN COVIDVaccinationsUS vacc
     and dea.[date] = vacc.[date]
 
 --TEMP TABLE
+
+SELECT dea.[location], dea.[date],dea.Population,vacc.people_fully_vaccinated,(people_fully_vaccinated/CAST(Population as float))*100 as PercentPopFullyVaccinated
+INTO PercentPopulationFullyVaxxed
+FROM [COVIDDeathsUS - Sheet1] dea
+JOIN COVIDVaccinationsUS vacc
+    on dea.[location] = vacc.[location]
+    and dea.[date] = vacc.[date]
+
 Select *
 FROM PercentPopulationFullyVaxxed
 
