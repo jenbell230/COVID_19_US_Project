@@ -11,7 +11,7 @@ SELECT [location],[date],population,total_cases,total_deaths,(total_deaths/total
 FROM [COVIDDeathsUS - Sheet1]
 
 --Looking at Total Cases per population
-SELECT [location],[date],population,total_cases,total_deaths,(total_cases/Population)*100 as InfectionPercentage
+SELECT[location],[date],population,total_cases,total_deaths,(total_cases/CAST(Population as float))*100 as InfectionPercentage
 FROM [COVIDDeathsUS - Sheet1]
 
 --Looking at Infection Rate
@@ -30,8 +30,9 @@ FROM [COVIDDeathsUS - Sheet1]
 GROUP BY [location],Population
 
 --Looking at Overall numbers
-SELECT date, SUM(new_cases), SUM(cast(new_deaths as float)),(SUM(cast(new_deaths as float))/SUM(new_cases)) *100 as DailyDeathPercentage
+SELECT SUM(new_cases) as total_cases, SUM(cast(new_deaths as float)) as total_deaths,(SUM(cast(new_deaths as float))/SUM(new_cases)) *100 as DailyDeathPercentage
 FROM [COVIDDeathsUS - Sheet1]
+
 
 
 
@@ -53,7 +54,13 @@ JOIN COVIDVaccinationsUS vacc
 Select *
 FROM PercentPopulationFullyVaxxed
 
+SELECT MAX(people_fully_vaccinated) as TotalPeopleVaccinated,MAX(people_fully_vaccinated/CAST(Population as float))*100 as PopFullyVaxxed
+FROM PercentPopulationFullyVaxxed
 
-
+SELECT dea.[location], dea.[date],dea.Population, dea.total_deaths,vacc.people_fully_vaccinated,(people_fully_vaccinated/CAST(Population as float))*100 as PercentPopFullyVaccinated
+FROM [COVIDDeathsUS - Sheet1] dea
+JOIN COVIDVaccinationsUS vacc
+    on dea.[location] = vacc.[location]
+    and dea.[date] = vacc.[date]
 
 
